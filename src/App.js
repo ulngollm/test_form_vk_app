@@ -68,7 +68,7 @@ const App = () => {
 		fetchData();
 	}, []);
 
-	const go = e => {
+	const go = (e) => {
 		setActivePanel(e.currentTarget.dataset.to);
 	};
 	const viewIntro = async function(){
@@ -90,7 +90,7 @@ const App = () => {
 			<AppRoot>
 				<View activePanel={activePanel} popout={popout}>
 					<Home id={ROUTES.HOME} fetchedUser={fetchedUser} go={go} />
-					<Intro id={ROUTES.INTRO} fetchedUser={fetchedUser} go={viewIntro} userHasSeenIntro={userHasSeenIntro}/>
+					<Intro id={ROUTES.INTRO} fetchedUser={fetchedUser} go={go} userHasSeenIntro={userHasSeenIntro}/>
 				</View>
 			</AppRoot>
 		</AdaptivityProvider>
