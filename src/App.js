@@ -6,12 +6,26 @@ import { AdaptivityProvider, AppRoot } from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
 
 import Home from './panels/Home';
-import Persik from './panels/Persik';
+import Intro from './panels/Intro';
+
+/*маршруты */
+const ROUTES = {
+	HOME: 'home', 
+	INTRO: 'intro'
+}
+
+//storage api - любые значения key-value
+//так шо, мы можем хранить все данные для прилки в этом хранилище или нет?
+const STORAGE_KEYS = {
+	STATUS: 'status'
+}
 
 const App = () => {
-	const [activePanel, setActivePanel] = useState('home');
+	const [activePanel, setActivePanel] = useState(ROUTES.INTRO); //[состояние, хук]
 	const [fetchedUser, setUser] = useState(null);
 	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
+	const [userHasSeenIntro, setUserHasSeenIntro] = useState(false);
+	const [snackbar, setSnackbar] = useState(false);
 
 	useEffect(() => {
 		bridge.subscribe(({ detail: { type, data }}) => {
@@ -23,8 +37,33 @@ const App = () => {
 		});
 		async function fetchData() {
 			const user = await bridge.send('VKWebAppGetUserInfo');
+			const storageData = await bridge.send('VKWebAppStorageGet', {//https://vk.com/dev/vkbridge/vkwebappstorageget
+				keys: Object.keys(STORAGE_KEYS)
+			});
+			await bridge.send('VKWebAppStorageSet', {"key": "atata", "value": "blahbla"});
+			await bridge.send('VKWebAppStorageSet', {"key": "bloblo", "value": "ololo"});
+			// console.log(typeof storageData);
+			const data = {};
+			storageData.keys.forEach((key, value) => {
+				try {
+					data[key] = value?? {};
+					switch(key){
+						case STORAGE_KEYS.STATUS:
+							if(data[key].hasSeenIntro){
+								setActivePanel(ROUTES.HOME);
+								setUserHasSeenIntro(true);
+							}
+							break;
+						default:
+							break;
+					}
+				} catch (error) {
+					console.log(error);
+				}
+			});
 			setUser(user);
 			setPopout(null);
+			
 		}
 		fetchData();
 	}, []);
@@ -32,13 +71,26 @@ const App = () => {
 	const go = e => {
 		setActivePanel(e.currentTarget.dataset.to);
 	};
+	const viewIntro = async function(){
+		try {
+			await bridge.send('VkWebAppStorageSet', {//https://vk.com/dev/vkbridge/vkwebappstorageset
+				key: STORAGE_KEYS.STATUS,
+				value: JSON.stringify({hasSeenIntro: true})
+			});
+			const allData = await bridge.send('VKWebAppStorageGetKeys', {count: 10});//https://vk.com/dev/vkbridge/vkwebappstoragegetkeys
+			console.log(allData);
+			// go(ROUTES.HOME);
+		} catch (error) {
+			console.log('Проблемка с получением данных')
+		}
+	}
 
 	return (
 		<AdaptivityProvider>
 			<AppRoot>
 				<View activePanel={activePanel} popout={popout}>
-					<Home id='home' fetchedUser={fetchedUser} go={go} />
-					<Persik id='persik' go={go} />
+					<Home id={ROUTES.HOME} fetchedUser={fetchedUser} go={go} />
+					<Intro id={ROUTES.INTRO} fetchedUser={fetchedUser} go={viewIntro} userHasSeenIntro={userHasSeenIntro}/>
 				</View>
 			</AppRoot>
 		</AdaptivityProvider>
