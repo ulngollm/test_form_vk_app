@@ -68,6 +68,20 @@ const App = () => {
 		fetchData();
 	}, []);
 
+	const get = async function(){
+		const request  = await fetch('https://jsonplaceholder.typicode.com/todos/1');
+		if(request.status == 200){
+			const result = await request.json();
+			console.log(result);
+		}
+	}
+	const test = async function(){
+		const request = await fetch('http://ullungmai2.temp.swtest.ru/');
+		if(request.status == 200){
+			const result = await request.text();
+			console.log(result);
+		}
+	}
 	const go = (e) => {
 		setActivePanel(e.currentTarget.dataset.to);
 	};
@@ -89,7 +103,7 @@ const App = () => {
 		<AdaptivityProvider>
 			<AppRoot>
 				<View activePanel={activePanel} popout={popout}>
-					<Home id={ROUTES.HOME} fetchedUser={fetchedUser} go={go} />
+					<Home id={ROUTES.HOME} fetchedUser={fetchedUser} go={go} get={test}  />
 					<Intro id={ROUTES.INTRO} fetchedUser={fetchedUser} go={go} userHasSeenIntro={userHasSeenIntro}/>
 				</View>
 			</AppRoot>

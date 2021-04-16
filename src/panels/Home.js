@@ -10,7 +10,7 @@ import Cell from '@vkontakte/vkui/dist/components/Cell/Cell';
 import Div from '@vkontakte/vkui/dist/components/Div/Div';
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
 
-const Home = ({ id, go, fetchedUser }) => (
+const Home = ({ id, go, fetchedUser, get }) => (
 	<Panel id={id}>
 		<PanelHeader>Example</PanelHeader>
 		{fetchedUser &&
@@ -27,6 +27,9 @@ const Home = ({ id, go, fetchedUser }) => (
 			<Div>
 				<Button stretched size="l" mode="secondary" onClick={go} data-to="intro">
 					Show me the Persik, please
+				</Button>
+				<Button stretched size="l" mode="secondary" onClick={get}>
+					Show me the data, please
 				</Button>
 			</Div>
 		</Group>
