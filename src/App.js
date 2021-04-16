@@ -7,11 +7,13 @@ import '@vkontakte/vkui/dist/vkui.css';
 
 import Home from './panels/Home';
 import Intro from './panels/Intro';
+import Registration from './panels/Registration';
 
 /*маршруты */
 const ROUTES = {
 	HOME: 'home', 
-	INTRO: 'intro'
+	INTRO: 'intro',
+	REGISTER: 'register'
 }
 
 //storage api - любые значения key-value
@@ -21,7 +23,7 @@ const STORAGE_KEYS = {
 }
 
 const App = () => {
-	const [activePanel, setActivePanel] = useState(ROUTES.INTRO); //[состояние, хук]
+	const [activePanel, setActivePanel] = useState(ROUTES.REGISTER); //[состояние, хук]
 	const [fetchedUser, setUser] = useState(null);
 	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
 	const [userHasSeenIntro, setUserHasSeenIntro] = useState(false);
@@ -105,6 +107,7 @@ const App = () => {
 				<View activePanel={activePanel} popout={popout}>
 					<Home id={ROUTES.HOME} fetchedUser={fetchedUser} go={go} get={test}  />
 					<Intro id={ROUTES.INTRO} fetchedUser={fetchedUser} go={go} userHasSeenIntro={userHasSeenIntro}/>
+					<Registration id={ROUTES.REGISTER} go={go} userHasSeenIntro={userHasSeenIntro}/>
 				</View>
 			</AppRoot>
 		</AdaptivityProvider>
