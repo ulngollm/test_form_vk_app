@@ -27,7 +27,7 @@ const Intro = function(props){
 				</Group>
 				<FixedLayout vertical="bottom">
 					<Div>
-						<Button mode="commerce" size="xl" onClick={props.go} data-to='home'>
+						<Button stretched mode="commerce" size="xl" onClick={props.go} data-to='home'>
 							Окей, бро
 						</Button>
 					</Div>
